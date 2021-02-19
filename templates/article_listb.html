@@ -1,0 +1,46 @@
+
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Approved Articles</title>
+</head>
+<body> 
+    {% block content %}
+    <div>
+    <a class="btn btn-default" href="{% url 'add_article' %}">ADD AN ARTICLE NOW</a><br><br><hr>
+    {% for article in articles %}
+        <div class="post">
+            <div class="date">
+                {{ article.date_uploaded }} <b>{{ article.author }}</b>
+            {% if article.author.user.id != request.user.id %}
+                {% if article.author.user.id not in followings %}
+                  <a class="btn btn-sm btn-info" href="{% url 'follow' article.author.user.id %}">Follow</a>
+                {% else %}
+                <a class="btn btn-sm btn-danger" href="{% url 'unfollow' article.author.user.id %}">Unfollow</a>
+                {% endif %}
+             {% endif %}
+                
+                {% if not article.approved %}
+                <b><h4>Approval Status: In progress</h4></b>
+                <a class="btn btn-default" href="{% url 'approve_article' id=article.id %}">Approve Article</a>
+                {% endif %}
+            </div>
+            <h2><a href="{% url 'article_detail' id=article.id %}">{{ article.title }}</a></h2>
+            {% for tag in article.tags.all %}
+            <a class="btn btn-warning" href="{% url 'filter_tag' name=tag.name %}">{{tag.name}}</a>
+            {% endfor %}
+            <p>{{ article.text|linebreaksbr }}</p>
+            <a href="{% url 'article_detail' id=article.id %}">Comments: {{ article.comments.count }}</a>
+            <p>{{ article.num_of_likes }} likes </p>
+            <br>
+            <hr>
+        </div>
+    </div>
+    {% endfor %}
+{% endblock content %}
+  
+</body>
+</html> 

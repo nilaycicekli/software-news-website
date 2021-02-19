@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Hello {{user.get_full_name}}</title>
+</head>
+<body bgcolor="">
+    <b> <h3>{{ user.first_name }} {{ user.last_name }}</h3></b>
+    {% if user.id != request.user.id %}
+    {% if user.id not in followingsid %}
+      <a class="btn btn-sm btn-info" href="{% url 'follow' user.id %}">Follow</a>
+    {% else %}
+    <a class="btn btn-sm btn-danger" href="{% url 'unfollow' user.id %}">Unfollow</a>
+    {% endif %}
+ {% endif %}
+
+    <br> <img src="{{ profile.profile_photo.url }}" alt="{{ user.username }} 's profile picture'">
+    {{ profile.bio }}
+    <br>
+    {% if request.user.id == user.id  %}
+    <br> Followings:
+    {% for following in followings %}
+    <!-- {{ following }} -->
+    <a class="btn btn-info"  href="{% url 'profile' following.id %}">{{ following.get_full_name }}</a>
+    {% endfor %}
+    {% endif %}
+    <br>
+    <br> Followers:  
+    {% for follower in followers %}
+    <!-- {{ followers }} -->
+    <a class="btn btn-info" href="{% url 'profile' follower.id %}">{{ follower.get_full_name }}</a>
+    {% endfor %}
+             
+    <br>
+ 
+
+
+
+    {%if message%}
+    {{message}}
+    {%endif%}
+<br>
+{% if request.user.id == user.id  %}
+  
+<br>
+<h5>UPDATE PROFILE</h5>
+    <form action="update_profile" method='post'>
+    {% csrf_token %}
+
+    <input type="text" id="first_name" name ="first_name" value="{{user.first_name}}" placeholder="First Name"><br>
+    <input type="text" id="last_name" name="last_name" value="{{user.last_name}}" placeholder="Last Name"><br>
+    <input type="text" id="username" name="username" value="{{user.username}}" placeholder="Username"><br>
+    <input type="email" id="email" name="email" value="{{user.email}}" placeholder="email"><br>
+
+    <input type="submit">
+    <div>
+    {% for m in messages %}
+        <h3>{{m}}</h3>
+
+    {% endfor %}
+    </div>
+    </form>
+    <br>
+    <a class="btn btn-sm btn-danger" href="{% url 'liked' user.id %}">LIKED</a>
+    {% endif %}
+    <br>
+    <br>
+    <a class="btn btn-sm btn-danger" href="{% url 'posts' user.id %}">POSTS</a>
+       
+</body>
+</html>
+

@@ -1,0 +1,132 @@
+{% extends "index.html" %}
+{% block content %}
+
+<body>
+    <br><br><br><br><br>
+  <div class="container" style="margin-top: 50px">
+    <div class="row flex-lg-nowrap">
+      <div class="col">
+        <div class="row">
+          <div class="col mb-3">
+            <div class="card">
+              <div class="card-body">
+                <div class="e-profile">
+                  <div class="row">
+                    <div class="col-12 col-sm-auto mb-3">
+                      <div class="mx-auto" style="width: 140px">
+                        <div class="d-flex justify-content-center align-items-center rounded" style="
+                              height: 140px;
+                              background-color: rgb(233, 236, 239);
+                            ">
+                            {% if profile.profile_photo %}
+                            <a href="{% url 'update_profile' %}">
+                              <img width="140px" height="140px" src="{{ profile.profile_photo.url }}"
+                                class="align-self-center mr-3" alt="profile photo" height="150px">
+                            </a>
+                            {% endif %}
+                          
+                        </div>
+                      </div>
+                    </div>
+                    <div class="text-center text-sm-left mb-2 mb-sm-0">
+                      <h4 class="pt-sm-2 pb-1 mb-0 text-nowrap">{{user.username}}</h4>
+                      <p class="mb-0">{{user.email}}</p>
+                      <div class="mt-2">
+                        <!-- <button class="btn btn-primary" type="button">
+                          <i class="fa fa-fw fa-camera"></i>
+                          <span>Change Photo</span>
+                        </button> -->
+                     
+                      </div>
+                     
+                    </div>
+                  </div>
+                
+                  <div class="tab-content pt-3">
+                    <div class="tab-pane active">
+                      <form method="POST" action="" class="form" novalidate="" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row">
+                          <div class="col mb-3">
+                            <div class="form-group">
+                              <label>Photo</label>
+                              {{ pform.profile_photo }} 
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col">
+                            <div class="row">
+                              <div class="col">
+                                <div class="form-group">
+                                  <label>Name</label>
+                                  {{ uform.first_name }}
+                                </div>
+                              </div>
+                              <div class="col">
+                                <div class="form-group">
+                                  <label>Surname</label>
+                                  {{ uform.last_name }}
+                                </div>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col">
+                                <div class="form-group">
+                                  <label>Email</label>
+                                  {{ uform.email }}
+                                </div>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col mb-3">
+                                <div class="form-group">
+                                  <label>Biography</label>
+                                  {{ pform.bio }}
+                                </div>
+                              </div>
+                            </div>
+                          
+                          </div>
+                        </div>
+
+                        <a href=""> <button class="btn btn-primary profile-button" type="submit">
+                            Save
+                          </button></a>
+                      </form>
+                    
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col d-flex justify-content-center">
+
+      </div>
+    </div>
+  </div>
+  <script>
+
+    //Query All input fields
+
+    var form_fields = document.querySelectorAll('[name="first_name"], [name="last_name"], [name="email"],[name="bio"]');
+
+    for (var f in form_fields) {
+      form_fields[f].className += ' form-control'
+    }
+
+    form_fields[0].placeholder = 'Name';
+    form_fields[1].placeholder = 'Surname';
+    form_fields[2].placeholder = 'Email';
+    form_fields[3].placeholder = 'Bio';
+
+  </script>
+</body>
+
+{% endblock %}

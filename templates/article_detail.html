@@ -1,0 +1,219 @@
+{% extends "main.html" %}
+{% load static %}
+
+{% block content %}
+  
+    <!-- Page Content -->
+    <!-- Banner Starts Here -->
+    <div class="heading-page header-text">
+      <section class="page-heading">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="text-content">
+                <h4>Article Details</h4>
+                <h2>{{ article.title }}</h2>
+                <h6 style="color:white"><I>by {{ article.author }}</I></h6>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    
+    <!-- Banner Ends Here -->
+
+    <section class="call-to-action">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="main-content">
+              <div class="row">
+                <div class="col-lg-8">
+                  <span>Why Don't You Share Too?</span>
+                  <h4>We would love our readers to be active participants. Share something now. We're waiting for you!</h4>
+                </div>
+                <div class="col-lg-4">
+                  <div class="main-button">
+                    <a rel="nofollow" href="{% url 'add_article' %}" target="_parent">Add Article</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <section class="blog-posts grid-system">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8">
+            <div class="all-blog-posts">
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="blog-post">
+                    <div class="blog-thumb">
+                      <!-- <img src=" {% static 'assets/images/blog-post-02.jpg' %}  " alt=""> -->
+                      {% if article.img %}
+                      <img src="{{ article.img.url }}"><br>
+                      {% endif %}
+                    </div>
+                    <div class="down-content">
+                      <span></span>
+                      <a href=""><h4>{{ article.title }}</h4></a>
+                      <ul class="post-info">
+                        <li><a href="{% url 'profile' article.author.user.id %}">{{ article.author }}</a></li>
+                        <li><a href="#">{{ article.date_uploaded }}</a></li>
+                        <li><a href="#comments">{{ article.comments.count }} Comments</a></li>
+                        <li><a href="{% url 'like' article.id %}">{{ article.likes.count }} Likes</a></li>
+                        {% if article.author.user.id != request.user.id %}
+                        {% if article.author.user.id not in followings %}
+                        <li>  <a class="btn btn-sm btn-info" href="{% url 'follow' article.author.user.id %}">Follow</a></li>
+                        {% else %}
+                        <li><a class="btn btn-sm btn-danger" href="{% url 'unfollow' article.author.user.id %}">Unfollow</a></li>
+                        {% endif %}
+                     {% endif %}
+                      </ul>
+                      <p> {{ article.body | safe }}</p>
+                      <div class="post-options">
+                        <div class="row">
+                          <div class="col-6">
+                            <ul class="post-tags">
+                              <li><i class="fa fa-tags"></i></li>
+                              {% for tag in tags %}
+                              <li><a href="{% url 'filter_tag' name=tag.name %}">{{tag.name}}</a> </li>
+                              {% endfor %}
+                            </ul>
+                          </div>
+                          <!-- <div class="col-6">
+                            <ul class="post-share">
+                              <li><i class="fa fa-share-alt"></i></li>
+                              <li><a href="#">Facebook</a>,</li>
+                              <li><a href="#"> Twitter</a></li>
+                            </ul>
+                          </div> -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div id="comments" class="col-lg-12">
+                  <div  class="sidebar-item comments">
+                    <div  class="sidebar-heading">
+                      <h2>{{ article.comments.count }} comments</h2>
+                    </div>
+                    <div class="content">
+                      <ul>
+                        {% for comment in article.comments.all %}
+                        <li>
+                            <div class="author-thumb">
+                              {% if comment.author.profile_photo %}
+                              <img src="{{ comment.author.profile_photo.url }}" alt="">
+                              {% endif %}
+                            </div>
+                            <div class="right-content">
+                                <div class="row">
+                                    <div class="col">
+                            <h4>{{ comment.author }}<span>{{ comment.created_date }}</span></h4></div>
+                            {% if  comment.author.user.id == request.user.id or request.user.is_staff%}
+                           <div class="col-2  align-items-center text-align-center"> 
+                               <a class="btn btn-light" href="{% url 'remove_comment' id=comment.id %}" style="border:none; background-color:white">
+                                   <i class="fas fa-trash-alt" style="color: rgb(231, 63, 63);"></i>
+                                </a>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <p>{{ comment.text | safe }}</p>
+                            </div>
+                          </li><br>
+                    {% empty %}
+                        <p>No comments here yet :(</p>
+                    {% endfor %}
+                       
+                        <!-- <li class="replied">
+                          <div class="author-thumb">
+                            <img src="" alt="">
+                          </div>
+                          <div class="right-content">
+                            <h4>Thirteen Man<span>May 20, 2020</span></h4>
+                            <p>In porta urna sed venenatis sollicitudin. Praesent urna sem, pulvinar vel mattis eget.</p>
+                          </div>
+                        </li> -->
+                      
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-12">
+                  <div class="sidebar-item submit-comment">
+                    <div class="sidebar-heading">
+                      <h2>Your comment</h2>
+                    </div>
+                    <div class="content">
+                        <form method="POST" class="" action="{% url 'add_comment' article.id %}">
+
+                            {% csrf_token %}
+                            {{ form.media }}
+                            {{ form.as_p }}
+                            <button type="submit" class="main-button">Submit</button>
+                        </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="sidebar">
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="sidebar-item search">
+                    <form id="search_form" name="gs" method="GET" action="{% url 'search_results' %}">
+                      <input type="text" name="q" class="searchText" placeholder="type to search..." autocomplete="on">
+                    </form>
+                  </div>
+                </div>
+                <div class="col-lg-12">
+                  <div class="sidebar-item recent-posts">
+                    <div class="sidebar-heading">
+                      <h2>Recent Posts</h2>
+                    </div>
+                    <div class="content">
+                      <ul>
+                          {% for article in recent_articles  %}
+                          <li><a href="{% url 'article_detail' article.id %}">
+                            <h5>{{ article.title }}</h5>
+                          
+                            <span>{{ article.date_uploaded }}</span>
+                          </a></li>
+                          {% endfor %}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-12">
+                  <div class="sidebar-item tags">
+                    <div class="sidebar-heading">
+                      <h2>Tag</h2>
+                    </div>
+                    <div class="content">
+                      <ul>
+                        {% for tag in alltags %}
+                      <li><a  href="{% url 'filter_tag' name=tag.name %}">{{tag.name}}</a></li>
+                        {% endfor %}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+{% endblock content %}
+  
+

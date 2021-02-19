@@ -1,0 +1,401 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="TemplateMo">
+  <link
+    href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i&display=swap"
+    rel="stylesheet">
+
+  <title>DeveloperGarage</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+
+
+  <!-- Additional CSS Files -->
+  <link rel="stylesheet" href="{% static 'assets/css/fontawesome.css' %}">
+  <link rel="stylesheet" href="{% static 'assets/css/templatemo-stand-blog.css' %}">
+  <link rel="stylesheet" href="{% static 'assets/css/owl.css' %}">
+  {% block link %}
+
+  {% endblock link %}
+  <!--
+
+TemplateMo 551 Stand Blog
+
+https://templatemo.com/tm-551-stand-blog
+
+-->
+</head>
+
+<body>
+
+  <!-- ***** Preloader Start ***** -->
+  <div id="preloader">
+    <div class="jumper">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+  <!-- ***** Preloader End ***** -->
+
+  {% if request.user.is_authenticated %}
+  {% include "nav_bar2.html" %}
+  {% else %}
+  {% include "nav_bar.html" %}
+  {% endif %}
+
+
+  <body>
+    <section class="blog-posts">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8">
+            <div class="all-blog-posts">
+              <div class="row">
+                {% for article in articles %}
+                <div class="col-lg-12">
+                  <div class="blog-post">
+                    <div class="blog-thumb">
+                      {% if article.img %}
+                      <img src="{{ article.img.url }}"><br>
+                      {% endif %}
+                    </div>
+                    <div class="down-content">
+                      <span></span>
+                      <a href="{% url 'article_detail' id=article.id %}">
+                        <h4>{{ article.title }}</h4>
+                      </a>
+                      <ul class="post-info">
+                        <li><a href="{% url 'profile' article.author.user.id %}">{{article.author}}</a></li>
+                        <li><a href="{% url 'article_detail' id=article.id %}">{{ article.date_uploaded }}</a></li>
+                        <li><a href="{% url 'article_detail' id=article.id %}">{{ article.comments.count }} Comments</a>
+                        </li>
+                        <li><a href="{% url 'article_detail' id=article.id %}">{{ article.likes.count }} Likes</a></li>
+                      </ul>
+                      <p>{{article.text}}</p>
+                      <div class="post-options">
+                        <div class="row">
+                          <div class="col-6">
+                            <ul class="post-tags">
+                              <li><i class="fa fa-tags"></i></li>
+                              {% for tag in article.tags.all %}
+                              <li><a href="{% url 'filter_tag' name=tag.name %}">{{tag.name}}</a> </li>
+                              {% endfor %}
+                            </ul>
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+
+
+                <div class="col-lg-12">
+                  <div class="main-button">
+                    <a href="{% url 'add_article' %}">Start Typing Now</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+    <div class="heading-page header-text">
+      <section class="page-heading">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="text-content">
+                <h4>Profile</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <!-- Main container -->
+    <section>
+      <div class="container ">
+
+        <!-- container for bio and buttons -->
+        <div class="container " style="height:100vh; width:100vw">
+
+          <div class="container px-lg-5  " style="padding:50px;">
+
+            <div class="container">
+              <div class="d-flex  row align-items-center justify-content-between">
+                <div class="col d-flex">
+
+
+
+                </div>
+                <div class="col text-right ">
+                  <a style="color:black" href="{% url 'update_profile' %}">Edit <i class="fa fa-user-edit"></i></a>
+                </div>
+
+              </div>
+            </div>
+
+
+            <div class="card">
+              <div class="card-body">
+                <div class="e-profile">
+                  <div class="row">
+                    <div class="col-12 col-sm-auto mb-3">
+                      <div class="mx-auto" style="width: 140px">
+                        <div class="d-flex justify-content-center align-items-center rounded" style="
+                                height: 140px;
+                                background-color: rgb(233, 236, 239);
+                              ">
+                          {% if profile.profile_photo %}
+                          <a href="{% url 'index' %}">
+                            <img width="140px" height="140px" src="{{ profile.profile_photo.url }}"
+                              class="align-self-center mr-3" alt="profile photo" height="150px">
+                          </a>
+                          {% endif %}
+
+                        </div>
+                      </div>
+                    </div>
+                    <div class="text-center text-sm-left mb-2 mb-sm-0">
+                      <h4 class="pt-sm-2 pb-1 mb-0 text-nowrap">{{user.username}}</h4>
+
+                      <h6 class="pt-sm-2 pb-1 mb-0 text-nowrap">{{user.get_full_name}}</h6>
+                      <p class="mb-0">{{user.email}}</p>
+                      <div class="mt-2">
+                        <p>{{ profile.bio }}</p>
+                      </div>
+                      <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
+                        data-target="#myModal">Followings</button>
+                      <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
+                        data-target="#myModal2">Followers</button>
+
+
+                    </div>
+                  </div>
+
+                </div>
+
+
+              </div>
+            </div>
+
+
+            <div class="container my-4">
+              <!-- Trigger the modal with a button -->
+
+              <!-- Modal -->
+              <div id="myModal" class="modal fade" role="dialog">
+                <div class="modal-dialog modal-dialog-scrollable">
+
+                  <!-- Modal content-->
+                  <div class="modal-content"><br><br><br>
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h4 class="modal-title">Followings</h4>
+                    </div>
+                    <div class="modal-body">
+                      {% for following in followings %}
+                      <!-- {{ following }} -->
+                      <a class="btn btn-info" href="{% url 'profile' following.id %}">{{ following.username }}</a>
+                      {% endfor %}
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+
+              <!-- Trigger the modal with a button -->
+
+              <!-- Modal -->
+              <div id="myModal2" class="modal fade" role="dialog">
+                <div class="modal-dialog modal-dialog-scrollable">
+
+                  <!-- Modal content-->
+                  <div class="modal-content"><br><br><br>
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h4 class="modal-title">Followers</h4>
+                    </div>
+                    <div class="modal-body">
+                      {% for follower in followers %}
+                      <!-- {{ followers }} -->
+                      <a class="btn btn-info" href="{% url 'profile' follower.id %}">{{ follower.username }}</a>
+                      {% endfor %}
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <section class="blog-posts grid-system">
+              <div class="col-lg-4">
+                <div class="sidebar">
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <div class="search">
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <br>
+
+              <div class="container">
+                <div class="row">
+                  <div class="col-lg-12">
+                    <h4>Approved Articles</h4><br>
+
+                    <div class="all-blog-posts">
+                      <div class="row">
+                        {% for article in approved_articles %}
+
+                        <div class="col-lg-4">
+                          <div class="blog-post">
+                            <div class="blog-thumb">
+                              {% if article.img %}
+                              <img src="{{ article.img.url }}"><br>
+                              {% endif %}
+                            </div>
+                            <div class="down-content">
+                              <a href="{% url 'article_detail' id=article.id %}">
+                                <h4>{{article.title}}</h4>
+                              </a>
+                              <ul class="post-info">
+                                <li><a href="{% url 'profile' article.author.user.id %}">{{article.author}}</a></li>
+                                <li><a href="{% url 'article_detail' id=article.id %}">{{ article.date_uploaded }}</a>
+                                </li>
+                                <li><a href="{% url 'article_detail' id=article.id %}">{{ article.comments.count }}
+                                    Comments</a></li>
+                                <li><a href="{% url 'article_detail' id=article.id %}">{{ article.likes.count }}
+                                    Likes</a></li>
+                              </ul>
+                              <p>{{article.text}}</p>
+                              <div class="post-options">
+                                <div class="row">
+                                  <div class="col-lg-12">
+                                    <ul class="post-tags">
+                                      <li><i class="fa fa-tags"></i></li>
+                                      {% for tag in article.tags.all %}
+                                      <li><a href="{% url 'filter_tag' name=tag.name %}">{{tag.name}}</a> </li>
+                                      {% endfor %}
+                                    </ul>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        {% endfor %}
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="container">
+                <div class="row">
+                  <div class="col-lg-12">
+                    <h4>Unapproved Articles</h4><br>
+
+                    <div class="all-blog-posts">
+                      <div class="row">
+                        {% for article in unapproved_articles %}
+
+                        <div class="col-lg-4">
+                          <div class="blog-post">
+                            <div class="blog-thumb">
+                              {% if article.img %}
+                              <img src="{{ article.img.url }}"><br>
+                              {% endif %}
+                            </div>
+                            <div class="down-content">
+                              <a href="{% url 'article_detail' id=article.id %}">
+                                <h4>{{article.title}}</h4>
+                              </a>
+                              <ul class="post-info">
+                                <li><a href="{% url 'profile' article.author.user.id %}">{{article.author}}</a></li>
+                                <li><a href="{% url 'article_detail' id=article.id %}">{{ article.date_uploaded }}</a>
+                                </li>
+                                <li><a href="{% url 'article_detail' id=article.id %}">{{ article.comments.count }}
+                                    Comments</a></li>
+                                <li><a href="{% url 'article_detail' id=article.id %}">{{ article.likes.count }}
+                                    Likes</a></li>
+                              </ul>
+                              <p>{{article.text}}</p>
+                              <div class="post-options">
+                                <div class="row">
+                                  <div class="col-lg-12">
+                                    <ul class="post-tags">
+                                      <li><i class="fa fa-tags"></i></li>
+                                      {% for tag in article.tags.all %}
+                                      <li><a href="{% url 'filter_tag' name=tag.name %}">{{tag.name}}</a> </li>
+                                      {% endfor %}
+                                    </ul>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        {% endfor %}
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+    </section><br><br><br><br><br><br><br><br><br><br><br>
+
+  </body>
+  <!-- Bootstrap core JavaScript -->
+  <script src=" {% static 'vendor/jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+  <!-- Additional Scripts -->
+  <script src="{% static 'assets/js/custom.js' %}"></script>
+  <script src="{% static 'assets/js/owl.js' %}"></script>
+  <script src="{% static 'assets/js/slick.js' %}"></script>
+  <script src="{% static 'assets/js/isotope.js' %}"></script>
+  <script src="{% static 'assets/js/accordion.js' %}"></script>
+
+  <script language="text/Javascript">
+    cleared[0] = cleared[1] = cleared[2] = 0; //set a cleared flag for each field
+    function clearField(t) {                   //declaring the array outside of the
+      if (!cleared[t.id]) {                      // function makes it static and global
+        cleared[t.id] = 1;  // you could use true and false, but that's more typing
+        t.value = '';         // with more chance of typos
+        t.style.color = '#fff';
+      }
+    }
+  </script>
+
+</body>
+
+</html>

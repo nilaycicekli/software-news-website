@@ -1,0 +1,71 @@
+{% extends "main.html" %}
+{% load static %}
+
+{% block link %}
+  
+
+    <!-- Title Page-->
+    <title>New Article</title>
+
+    <!-- Font special for pages-->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
+   
+    <!-- Main CSS-->
+    <link href=" {% static 'css/article-form.css' %}" rel="stylesheet" media="all">
+{% endblock link %}
+
+
+{% block content %}
+  
+    <div class="page-wrapper bg-dark p-t-100 p-b-50">
+        <div class="wrapper wrapper--w900">
+            <div class="card card-6">
+                <div class="card-heading">
+                    <h2 class="title">New Article</h2>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{% url 'add_article' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form.media }}
+                        <div class="form-row">
+                            <div class="name">Article Title</div>
+                            <div class="value">
+                                <div class="input--style-6">{{ form.title }}</div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="name">Article</div>
+                            <div class="value">
+                                <div class="input-group">
+                                    {{form.body}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="name">Article Title</div>
+                            <div class="value">
+                                <div class="input--style-6">{{ form.tags }}</div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="name">Upload Image</div>
+                            <div class="value">
+                                   {{form.img}}
+                                <div class="label--desc">Upload Article's Cover Image(Width:600px)</div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                    <a>
+                    <button class="btn btn--radius-2 btn--blue-2" type="submit">Send to Approval</button>
+                    </a>
+                </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+
+

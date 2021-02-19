@@ -1,0 +1,8 @@
+{% autoescape off %}
+
+Hey {{user.username}}!
+Welcome to DeveloperGarage. We hope you enjoy your journey. 
+But first things first, please take a few seconds to activate your account by clicking on this link:
+
+http://{{domain}}{% url 'activate' uid64=uid token=token %}
+{% endautoescape %}

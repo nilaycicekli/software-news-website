@@ -1,0 +1,11 @@
+{% if articles %}
+<h2><b>APPROVED</b></h2>
+{% else %}
+<h3>no liked articles yet.</h3>
+{% endif %}
+{% for article in articles  %}
+  <h3>{{article.title}}</h3>
+  <p>{{article.author}}</p>
+  <p>{{article.date_uploaded}}</p>
+  <p>{{article.num_of_likes}} likes</p>
+{% endfor %}

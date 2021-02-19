@@ -1,0 +1,23 @@
+{% load static %}
+
+{% if approved_articles %}
+<h2><b>APPROVED</b></h2>
+{% endif %}
+{% for article in approved_articles  %}
+  <h3>{{article.title}}</h3>
+  <p>{{article.date_uploaded}}</p>
+  <p>{{article.num_of_likes}} likes</p>
+{% endfor %}
+
+{% if unapproved_articles %}
+<h2><b>NOT APPROVED</b></h2>
+{% endif %}
+{% for article in unapproved_articles  %}
+  <h3>{{article.title}}</h3>
+  <p>{{article.date_uploaded}}</p>
+{% endfor %}
+
+{% if not approved_articles and not unapproved_articles %}
+  <p>There is no articles yet :( </p>
+{% endif %}
+
