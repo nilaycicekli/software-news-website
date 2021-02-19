@@ -1,5 +1,8 @@
+## About DeveloperGarage
+
+- This is a website written in Python's framework Django, that is aiming for people to share software related articles.
+
 ## Starting
-- Check requirements.txt
 
 - Run `python manage.py runserver`
 
